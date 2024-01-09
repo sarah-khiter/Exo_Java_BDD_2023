@@ -8,7 +8,9 @@
 </head>
 <body>
     <h1>Exemple de connexion à MariaDB avec JSP</h1>
-    <% 
+
+    <h2>Réponse de l'exercice 1 : Les films entre 2000 et 2015</h2>
+    <%
     String url = "jdbc:mariadb://localhost:3306/films";
     String user = "mysql";
     String password = "mysql";
