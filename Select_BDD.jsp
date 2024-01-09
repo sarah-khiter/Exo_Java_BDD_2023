@@ -137,7 +137,7 @@
         }
     }
     %>
-<!-- Exercice 4 -->
+    <!-- Exercice 4 -->
     <h2>Exercice 4 : Ajouter un nouveau film</h2>
     <form method="post" action="">
         <label for="nouveauTitreFilm">Titre du nouveau film :</label>
@@ -161,24 +161,6 @@
 
             if (rowsAffectedExercice4 > 0) {
                 out.println("<p>Le nouveau film a été ajouté avec succès.</p>");
-
-                // Rafraîchir la liste des films après l'ajout
-                String sqlExercice1Refreshed = "SELECT idFilm, titre, année FROM Film WHERE année > 2000 AND année < 2015";
-                PreparedStatement pstmtExercice1Refreshed = conn.prepareStatement(sqlExercice1Refreshed);
-                ResultSet rsExercice1Refreshed = pstmtExercice1Refreshed.executeQuery();
-
-                // Afficher les résultats de l'exercice 1 mis à jour
-                out.println("<h3>Liste des films mise à jour :</h3>");
-                while (rsExercice1Refreshed.next()) {
-                    String colonne1 = rsExercice1Refreshed.getString("idFilm");
-                    String colonne2 = rsExercice1Refreshed.getString("titre");
-                    String colonne3 = rsExercice1Refreshed.getString("année");
-                    out.println("id : " + colonne1 + ", titre : " + colonne2 + ", année : " + colonne3 + "</br>");
-                }
-
-                // Fermer les ressources de la requête de rafraîchissement
-                rsExercice1Refreshed.close();
-                pstmtExercice1Refreshed.close();
             } else {
                 out.println("<p>Erreur : Le nouveau film n'a pas pu être ajouté.</p>");
             }
@@ -194,6 +176,7 @@
         }
     }
     %>
+
 
 </body>
 </html>
