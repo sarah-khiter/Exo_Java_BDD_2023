@@ -137,6 +137,63 @@
         }
     }
     %>
+<!-- Exercice 4 -->
+    <h2>Exercice 4 : Ajouter un nouveau film</h2>
+    <form method="post" action="">
+        <label for="nouveauTitreFilm">Titre du nouveau film :</label>
+        <input type="text" id="nouveauTitreFilm" name="nouveauTitreFilm" required>
+        <label for="anneeNouveauFilm">Année du nouveau film :</label>
+        <input type="text" id="anneeNouveauFilm" name="anneeNouveauFilm" required>
+        <input type="submit" value="Ajouter">
+    </form>
+    <%
+    // Traitement de la saisie de l'utilisateur pour l'exercice 4
+    String nouveauTitreFilm = request.getParameter("nouveauTitreFilm");
+    String anneeNouveauFilm = request.getParameter("anneeNouveauFilm");
+    if (nouveauTitreFilm != null && anneeNouveauFilm != null && !nouveauTitreFilm.isEmpty() && !anneeNouveauFilm.isEmpty()) {
+        try {
+            int anneeNouveau = Integer.parseInt(anneeNouveauFilm);
+            String sqlExercice4 = "INSERT INTO Film (titre, année) VALUES (?, ?)";
+            PreparedStatement pstmtExercice4 = conn.prepareStatement(sqlExercice4);
+            pstmtExercice4.setString(1, nouveauTitreFilm);
+            pstmtExercice4.setInt(2, anneeNouveau);
+            int rowsAffectedExercice4 = pstmtExercice4.executeUpdate();
+
+            if (rowsAffectedExercice4 > 0) {
+                out.println("<p>Le nouveau film a été ajouté avec succès.</p>");
+
+                // Rafraîchir la liste des films après l'ajout
+                String sqlExercice1Refreshed = "SELECT idFilm, titre, année FROM Film WHERE année > 2000 AND année < 2015";
+                PreparedStatement pstmtExercice1Refreshed = conn.prepareStatement(sqlExercice1Refreshed);
+                ResultSet rsExercice1Refreshed = pstmtExercice1Refreshed.executeQuery();
+
+                // Afficher les résultats de l'exercice 1 mis à jour
+                out.println("<h3>Liste des films mise à jour :</h3>");
+                while (rsExercice1Refreshed.next()) {
+                    String colonne1 = rsExercice1Refreshed.getString("idFilm");
+                    String colonne2 = rsExercice1Refreshed.getString("titre");
+                    String colonne3 = rsExercice1Refreshed.getString("année");
+                    out.println("id : " + colonne1 + ", titre : " + colonne2 + ", année : " + colonne3 + "</br>");
+                }
+
+                // Fermer les ressources de la requête de rafraîchissement
+                rsExercice1Refreshed.close();
+                pstmtExercice1Refreshed.close();
+            } else {
+                out.println("<p>Erreur : Le nouveau film n'a pas pu être ajouté.</p>");
+            }
+
+            // Fermer les ressources de l'exercice 4
+            pstmtExercice4.close();
+        } catch (NumberFormatException e) {
+            out.println("<p>Erreur : Veuillez saisir une année valide pour le nouveau film.</p>");
+        } catch (SQLException e) {
+            // Ajouter des informations sur l'erreur SQL
+            out.println("<p>Erreur SQL : " + e.getMessage() + "</p>");
+            e.printStackTrace();
+        }
+    }
+    %>
 
 </body>
 </html>
