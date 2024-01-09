@@ -43,10 +43,41 @@
     <!-- Exercice 2 -->
     <h2>Exercice 2 : Année de recherche</h2>
     <form method="post" action="">
-        <!-- ... (code de l'exercice 2) -->
+        <label for="anneeRecherche">Saisir une année :</label>
+        <input type="text" id="anneeRecherche" name="anneeRecherche">
+        <input type="submit" value="Rechercher">
     </form>
     <%
-    // ... (code de traitement de l'exercice 2)
+    // Traitement de la saisie de l'utilisateur pour l'exercice 2
+    String anneeRecherche = request.getParameter("anneeRecherche");
+    if (anneeRecherche != null && !anneeRecherche.isEmpty()) {
+        try {
+            int annee = Integer.parseInt(anneeRecherche);
+            String sqlExercice2 = "SELECT idFilm, titre, année FROM Film WHERE année = ?";
+            PreparedStatement pstmtExercice2 = conn.prepareStatement(sqlExercice2);
+            pstmtExercice2.setInt(1, annee);
+            ResultSet rsExercice2 = pstmtExercice2.executeQuery();
+
+            // Afficher les résultats de l'exercice 2
+            out.println("<h3>Résultats de la recherche pour l'année " + anneeRecherche + " :</h3>");
+            while (rsExercice2.next()) {
+                String colonne1 = rsExercice2.getString("idFilm");
+                String colonne2 = rsExercice2.getString("titre");
+                String colonne3 = rsExercice2.getString("année");
+                out.println("id : " + colonne1 + ", titre : " + colonne2 + ", année : " + colonne3 + "</br>");
+            }
+
+            // Fermer les ressources de l'exercice 2
+            rsExercice2.close();
+            pstmtExercice2.close();
+        } catch (NumberFormatException e) {
+            out.println("<p>Erreur : Veuillez saisir une année valide.</p>");
+        } catch (SQLException e) {
+            // Ajouter des informations sur l'erreur SQL
+            out.println("<p>Erreur SQL : " + e.getMessage() + "</p>");
+            e.printStackTrace();
+        }
+    }
     %>
 
     <!-- Exercice 3 -->
@@ -73,28 +104,24 @@
 
             if (rowsAffected > 0) {
                 out.println("<p>Le titre du film avec l'ID " + filmID + " a été modifié avec succès.</p>");
+
+                // Rafraîchir la liste des films après la modification
+                String sqlExercice1Refreshed = "SELECT idFilm, titre, année FROM Film WHERE année > 2000 AND année < 2015";
+                PreparedStatement pstmtExercice1Refreshed = conn.prepareStatement(sqlExercice1Refreshed);
+                ResultSet rsExercice1Refreshed = pstmtExercice1Refreshed.executeQuery();
+
+                // Afficher les résultats de l'exercice 1 mis à jour
+                out.println("<h3>Liste des films mise à jour :</h3>");
+                while (rsExercice1Refreshed.next()) {
+                    String colonne1 = rsExercice1Refreshed.getString("idFilm");
+                    String colonne2 = rsExercice1Refreshed.getString("titre");
+                    String colonne3 = rsExercice1Refreshed.getString("année");
+                    out.println("id : " + colonne1 + ", titre : " + colonne2 + ", année : " + colonne3 + "</br>");
+                }
+
+                // Fermer les ressources de la requête de rafraîchissement
+                rsExercice1Refreshed.close();
+                pstmtExercice1Refreshed.close();
             } else {
                 out.println("<p>Aucun film trouvé avec l'ID " + filmID + ".</p>");
-            }
-
-            // Fermer les ressources de l'exercice 3
-            pstmtExercice3.close();
-        } catch (NumberFormatException e) {
-            out.println("<p>Erreur : Veuillez saisir un ID valide.</p>");
-        } catch (SQLException e) {
-            // Ajouter des informations sur l'erreur SQL
-            out.println("<p>Erreur SQL : " + e.getMessage() + "</p>");
-            e.printStackTrace();
-        }
-    }
-    %>
-
-    <!-- Fermer la connexion après l'exercice 3 -->
-    <% conn.close(); %>
-
-    <!-- Exercice 4 -->
-    <h2>Exercice 4 : La valeur maximum</h2>
-    <p>Créer un formulaire pour saisir un nouveau film dans la base de données</p>
-
-</body>
-</html>
+           
