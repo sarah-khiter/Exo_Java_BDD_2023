@@ -37,9 +37,6 @@
     // Fermer les ressources de l'exercice 1
     rsExercice1.close();
     pstmtExercice1.close();
-
-    // Fermer la connexion
-    conn.close();
     %>
 
     <h2>Exercice 2 : Année de recherche</h2>
@@ -76,6 +73,9 @@
             out.println("<p>Erreur : Veuillez saisir une année valide.</p>");
         }
     }
+
+    // Fermer la connexion après l'exercice 2
+    conn.close();
     %>
 
     <h2>Exercice 3 : Modification du titre du film</h2>
