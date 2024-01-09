@@ -79,7 +79,40 @@
     %>
 
     <h2>Exercice 3 : Modification du titre du film</h2>
-    <p>Créer un fichier permettant de modifier le titre d'un film sur la base de son ID (ID choisi par l'utilisateur)</p>
+    <form method="post" action="">
+        <label for="idFilm">ID du film à modifier :</label>
+        <input type="text" id="idFilm" name="idFilm" required>
+        <label for="nouveauTitre">Nouveau titre :</label>
+        <input type="text" id="nouveauTitre" name="nouveauTitre" required>
+        <input type="submit" value="Modifier">
+    </form>
+
+    <%
+    // Traitement de la saisie de l'utilisateur pour l'exercice 3
+    String idFilm = request.getParameter("idFilm");
+    String nouveauTitre = request.getParameter("nouveauTitre");
+    if (idFilm != null && nouveauTitre != null && !idFilm.isEmpty() && !nouveauTitre.isEmpty()) {
+        try {
+            int filmID = Integer.parseInt(idFilm);
+            String sqlExercice3 = "UPDATE Film SET titre = ? WHERE idFilm = ?";
+            PreparedStatement pstmtExercice3 = conn.prepareStatement(sqlExercice3);
+            pstmtExercice3.setString(1, nouveauTitre);
+            pstmtExercice3.setInt(2, filmID);
+            int rowsAffected = pstmtExercice3.executeUpdate();
+
+            if (rowsAffected > 0) {
+                out.println("<p>Le titre du film avec l'ID " + filmID + " a été modifié avec succès.</p>");
+            } else {
+                out.println("<p>Aucun film trouvé avec l'ID " + filmID + ".</p>");
+            }
+
+            // Fermer les ressources de l'exercice 3
+            pstmtExercice3.close();
+        } catch (NumberFormatException e) {
+            out.println("<p>Erreur : Veuillez saisir un ID valide.</p>");
+        }
+    }
+    %>
 
     <h2>Exercice 4 : La valeur maximum</h2>
     <p>Créer un formulaire pour saisir un nouveau film dans la base de données</p>
